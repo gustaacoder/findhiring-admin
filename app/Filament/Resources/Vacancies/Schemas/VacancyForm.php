@@ -43,7 +43,8 @@ class VacancyForm
                                 ->prefixIcon('heroicon-o-map-pin'),
                             TextInput::make('salary')
                                 ->label(__('Salary'))
-                                ->prefixIcon('heroicon-o-currency-dollar'),
+                                ->prefix('R$')
+                                ->numeric(),
                         ]),
 
                 Section::make(__('Publication Date'))

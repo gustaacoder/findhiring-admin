@@ -31,7 +31,7 @@ class VacancyResource extends Resource
 
     public static function getPluralLabel(): ?string
     {
-        return __('Vancancies');
+        return __('Vacancies');
     }
 
     public static function getLabel(): ?string

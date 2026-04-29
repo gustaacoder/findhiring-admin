@@ -23,11 +23,11 @@ class VacanciesTable
                     ->searchable(),
                 TextColumn::make('start_date')
                     ->label(__('Start Date'))
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('end_date')
                     ->label(__('End Date'))
-                    ->date()
+                    ->date('d/m/Y')
                     ->sortable(),
             ])
             ->filters([
