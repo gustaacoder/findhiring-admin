@@ -20,6 +20,7 @@ class VacanciesTable
                     ->searchable(),
                 TextColumn::make('salary')
                     ->label(__('Salary'))
+                    ->money('BRL')
                     ->searchable(),
                 TextColumn::make('start_date')
                     ->label(__('Start Date'))
