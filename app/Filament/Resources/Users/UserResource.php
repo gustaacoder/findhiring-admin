@@ -13,6 +13,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
+use Illuminate\Database\Eloquent\Model;
 
 class UserResource extends Resource
 {
@@ -23,6 +25,21 @@ class UserResource extends Resource
     protected static ?string $recordTitleAttribute = 'user';
 
     protected static ?string $tenantOwnershipRelationshipName = 'companies';
+
+    public static function getRecordTitle(?Model $record): string|Htmlable|null
+    {
+        return __('User');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Users');
+    }
+
+    public static function getLabel(): ?string
+    {
+        return __('User');
+    }
 
     public static function form(Schema $schema): Schema
     {
