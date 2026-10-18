@@ -35,7 +35,7 @@ enum ApplicationStatus: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getColor(): string|null
+    public function getColor(): ?string
     {
         return match ($this) {
             self::Pending => 'gray',

@@ -2,24 +2,25 @@
 
 namespace App\Filament\Resources;
 
-use App\Enums\JobStatus;
 use App\Filament\Resources\Jobs\Schemas\JobForm;
 use App\Filament\Resources\Jobs\Tables\JobsTable;
 use App\Models\Job;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class JobsResource extends Resource
 {
     protected static ?string $model = Job::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::Briefcase;
+    protected static BackedEnum|string|null $navigationIcon = Heroicon::Briefcase;
 
-    protected static ?string $navigationGroup = 'Recruitment';
+    protected static UnitEnum|string|null $navigationGroup = 'Recruitment';
 
     public static function getLabel(): ?string
     {

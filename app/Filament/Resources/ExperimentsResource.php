@@ -8,6 +8,7 @@ use App\Filament\Resources\Experiments\Pages\EditExperiment;
 use App\Filament\Resources\Experiments\Pages\ListExperiments;
 use App\Filament\Resources\Experiments\Pages\ViewExperiment;
 use App\Models\EvaluationExperiment;
+use BackedEnum;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -17,15 +18,15 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class ExperimentsResource extends Resource
 {
     protected static ?string $model = EvaluationExperiment::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::Beaker;
+    protected static BackedEnum|string|null $navigationIcon = Heroicon::Beaker;
 
-    protected static ?string $navigationGroup = 'Scientific Evaluation';
+    protected static UnitEnum|string|null $navigationGroup = 'Scientific Evaluation';
 
     public static function getLabel(): ?string
     {

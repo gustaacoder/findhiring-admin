@@ -4,7 +4,6 @@ namespace App\Services\Experiment;
 
 use App\Enums\ScreeningStatus;
 use App\Models\EvaluationExperiment;
-use App\Models\ExperimentRun;
 use App\Models\ReferenceEvaluation;
 use Illuminate\Support\Collection;
 

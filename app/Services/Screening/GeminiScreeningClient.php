@@ -60,7 +60,7 @@ class GeminiScreeningClient
 
     private function endpoint(): string
     {
-        $model = rawurlencode((string) config('findhiring.gemini.model', 'gemini-2.5-flash'));
+        $model = rawurlencode((string) config('findhiring.gemini.model', 'gemini-3.8-flash'));
 
         return self::ENDPOINT.'/'.$model.':generateContent';
     }

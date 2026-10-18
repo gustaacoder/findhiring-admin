@@ -7,10 +7,8 @@ use App\Enums\ScreeningStatus;
 use App\Filament\Resources\ExperimentsResource;
 use App\Models\Application;
 use App\Models\EvaluationExperiment;
-use App\Models\ExperimentRun;
 use App\Models\ReferenceEvaluation;
 use App\Services\Experiment\ExperimentMetricsService;
-use App\Services\Ranking\CandidateRankingService;
 use App\Services\Screening\ScreeningService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
@@ -21,10 +19,8 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
-use Filament\Tables\Columns\IconColumn;
+use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class ViewExperiment extends ViewRecord
 {

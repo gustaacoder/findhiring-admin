@@ -10,9 +10,9 @@ use App\Models\Candidate;
 use App\Models\Job;
 use App\Services\Resumes\ResumeStorageService;
 use App\Services\Screening\ScreeningService;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\QueryException;
 
 class ApplicationController extends Controller
 {
@@ -53,7 +53,7 @@ class ApplicationController extends Controller
                     'resume_mime_type' => $storedResume['mime_type'],
                     'resume_size_bytes' => $storedResume['size_bytes'],
                     'resume_fingerprint' => $storedResume['fingerprint'],
-                    'submitted_at' => now(),
+                    'status' => \App\Enums\ApplicationStatus::Pending->value, 'review_status' => \App\Enums\ReviewStatus::PendingReview->value, 'submitted_at' => now(),
                 ]);
             });
         } catch (QueryException $exception) {

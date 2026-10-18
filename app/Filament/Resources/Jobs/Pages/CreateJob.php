@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Jobs\Pages;
 
 use App\Filament\Resources\JobsResource;
-use App\Models\Job;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Support\Str;
 

@@ -20,7 +20,7 @@ class EvaluationExperimentFactory extends Factory
             'description' => fake()->paragraph(),
             'dataset_identifier' => Str::slug($name),
             'criteria_snapshot' => null,
-            'model_name' => 'gemini-2.5-flash',
+            'model_name' => 'gemini-3.8-flash',
             'prompt_version' => 'v1',
             'processing_config' => null,
             'status' => ExperimentStatus::Draft,

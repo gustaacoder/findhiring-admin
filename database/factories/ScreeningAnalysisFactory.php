@@ -19,7 +19,7 @@ class ScreeningAnalysisFactory extends Factory
             'score' => null,
             'eligible' => null,
             'summary' => null,
-            'model_name' => 'gemini-2.5-flash',
+            'model_name' => 'gemini-3.8-flash',
             'prompt_version' => 'v1',
             'criteria_snapshot' => null,
             'duration_ms' => null,

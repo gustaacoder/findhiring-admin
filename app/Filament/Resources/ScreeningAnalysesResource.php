@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Enums\ScreeningStatus;
 use App\Models\ScreeningAnalysis;
+use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -11,14 +12,15 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class ScreeningAnalysesResource extends Resource
 {
     protected static ?string $model = ScreeningAnalysis::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::Sparkles;
+    protected static BackedEnum|string|null $navigationIcon = Heroicon::Sparkles;
 
-    protected static ?string $navigationGroup = 'AI Screening';
+    protected static UnitEnum|string|null $navigationGroup = 'AI Screening';
 
     public static function getLabel(): ?string
     {

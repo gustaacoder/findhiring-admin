@@ -70,7 +70,7 @@ class ScreeningService
             'status' => ScreeningStatus::Processing,
             'started_at' => now(),
             'attempts' => $analysis->attempts + 1,
-            'model_name' => (string) config('findhiring.gemini.model', 'gemini-2.5-flash'),
+            'model_name' => (string) config('findhiring.gemini.model', 'gemini-3.8-flash'),
             'prompt_version' => (string) config('findhiring.gemini.prompt_version', 'v1'),
             'criteria_snapshot' => $snapshot,
             'error_code' => null,
