@@ -2,16 +2,18 @@
 
 namespace App\Enums;
 
-use Filament\Support\Enums\Contracts\HasLabel;
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
-enum ReviewDecision: string implements HasLabel
+enum ReviewDecision: string implements HasColor, HasIcon, HasLabel
 {
     case Proceed = 'proceed';
     case DoNotProceed = 'do_not_proceed';
 
-    public function getLabel(): ?Htmlable|string
+    public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
             self::Proceed => 'Proceed',

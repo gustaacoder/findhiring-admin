@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-use Filament\Support\Enums\Contracts\HasLabel;
+use Filament\Support\Contracts\HasLabel;
 use Illuminate\Contracts\Support\Htmlable;
 
 enum CriterionType: string implements HasLabel
@@ -10,7 +10,7 @@ enum CriterionType: string implements HasLabel
     case Required = 'required';
     case Preferred = 'preferred';
 
-    public function getLabel(): ?Htmlable|string
+    public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
             self::Required => 'Required',

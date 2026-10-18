@@ -1,5 +1,7 @@
 <?php
 
+use App\Exceptions\DuplicateApplicationException;
+use App\Services\Resumes\UnsupportedResumeException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -19,4 +21,19 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request): bool => $request->is('api/*') || $request->expectsJson(),
         );
+
+        $exceptions->render(function (DuplicateApplicationException $exception, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json(['message' => $exception->getMessage()], 409);
+            }
+        });
+
+        $exceptions->render(function (UnsupportedResumeException $exception, Request $request) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => $exception->getMessage(),
+                    'errors' => ['resume' => [$exception->getMessage()]],
+                ], 422);
+            }
+        });
     })->create();

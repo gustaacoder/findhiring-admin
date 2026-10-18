@@ -2,17 +2,19 @@
 
 namespace App\Enums;
 
-use Filament\Support\Enums\Contracts\HasLabel;
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
-enum ReviewStatus: string implements HasLabel
+enum ReviewStatus: string implements HasColor, HasIcon, HasLabel
 {
     case PendingReview = 'pending_review';
     case UnderReview = 'under_review';
     case Completed = 'completed';
 
-    public function getLabel(): ?Htmlable|string
+    public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
             self::PendingReview => 'Pending Review',

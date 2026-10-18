@@ -2,18 +2,20 @@
 
 namespace App\Enums;
 
-use Filament\Support\Enums\Contracts\HasLabel;
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Contracts\Support\Htmlable;
 
-enum JobStatus: string implements HasLabel
+enum JobStatus: string implements HasColor, HasIcon, HasLabel
 {
     case Draft = 'draft';
     case Published = 'published';
     case Closed = 'closed';
     case Archived = 'archived';
 
-    public function getLabel(): ?Htmlable|string
+    public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
             self::Draft => 'Draft',
