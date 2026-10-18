@@ -22,13 +22,11 @@ class UserResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Users;
 
-    protected static ?string $recordTitleAttribute = 'user';
-
-    protected static ?string $tenantOwnershipRelationshipName = 'companies';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function getRecordTitle(?Model $record): string|Htmlable|null
     {
-        return __('User');
+        return $record?->name;
     }
 
     public static function getPluralLabel(): ?string
