@@ -72,7 +72,7 @@ class ApplicationController extends Controller
             'data' => [
                 'id' => $application->id,
                 'status' => $application->status->value,
-                'message' => 'Your application has been submitted successfully.',
+                'message' => __('Your application has been submitted successfully.'),
             ],
         ], 201);
     }

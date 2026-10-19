@@ -37,12 +37,12 @@ class EvaluationExperiment extends Model
 
     public function runs(): HasMany
     {
-        return $this->hasMany(ExperimentRun::class);
+        return $this->hasMany(ExperimentRun::class, 'experiment_id');
     }
 
     public function referenceEvaluations(): HasMany
     {
-        return $this->hasMany(ReferenceEvaluation::class);
+        return $this->hasMany(ReferenceEvaluation::class, 'experiment_id');
     }
 
     public function consolidatedReferences()

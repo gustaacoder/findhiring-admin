@@ -15,40 +15,50 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class CriteriaRelationManager extends RelationManager
 {
     protected static string $relationship = 'criteria';
 
-    protected static ?string $title = 'Criteria';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('Criteria');
+    }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('Name'))
                     ->required()
                     ->maxLength(190),
                 Textarea::make('description')
+                    ->label(__('Description'))
                     ->rows(3)
                     ->nullable(),
                 Textarea::make('expected_evidence')
+                    ->label(__('Expected Evidence'))
                     ->rows(3)
                     ->nullable(),
                 Select::make('type')
+                    ->label(__('Type'))
                     ->options(CriterionType::class)
                     ->default(CriterionType::Required)
                     ->required()
                     ->enum(CriterionType::class)
                     ->native(false),
                 TextInput::make('weight')
+                    ->label(__('Weight (%)'))
                     ->numeric()
                     ->required()
                     ->minValue(1)
                     ->maxValue(100)
-                    ->helperText('The sum of all criteria weights must be 100% before publication.'),
+                    ->helperText(__('The sum of all criteria weights must be 100% before publication.')),
                 TextInput::make('sort_order')
+                    ->label(__('Sort Order'))
                     ->numeric()
                     ->default(0)
                     ->required(),
@@ -60,12 +70,15 @@ class CriteriaRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('Name'))
                     ->searchable(),
                 TextColumn::make('type')
+                    ->label(__('Type'))
                     ->badge(),
                 TextColumn::make('weight')
-                    ->label('Weight (%)'),
+                    ->label(__('Weight (%)')),
                 TextColumn::make('sort_order')
+                    ->label(__('Sort Order'))
                     ->sortable(),
             ])
             ->filters([])

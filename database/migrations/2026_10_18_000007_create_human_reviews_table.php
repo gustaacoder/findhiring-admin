@@ -11,13 +11,14 @@ return new class extends Migration
         Schema::create('human_reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('application_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('reviewer_id')->constrained('users')->nullOnDelete();
+            $table->unsignedBigInteger('reviewer_id')->nullable();
             $table->string('decision');
             $table->text('notes')->nullable();
             $table->timestamp('reviewed_at');
             $table->timestamps();
 
             $table->index(['application_id', 'decision']);
+            $table->foreign('reviewer_id')->references('id')->on('users')->nullOnDelete();
         });
     }
 

@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\Applications\Pages\ListApplications;
 use App\Filament\Resources\Applications\Pages\ViewApplication;
+use App\Filament\Resources\Applications\Tables\ApplicationsTable;
 use App\Models\Application;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -23,12 +24,17 @@ class ApplicationsResource extends Resource
 
     public static function getLabel(): ?string
     {
-        return 'Application';
+        return __('Application');
     }
 
     public static function getPluralLabel(): ?string
     {
-        return 'Applications';
+        return __('Applications');
+    }
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('Recruitment');
     }
 
     public static function form(Schema $schema): Schema

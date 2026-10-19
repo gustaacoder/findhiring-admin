@@ -18,10 +18,10 @@ enum ApplicationStatus: string implements HasColor, HasIcon, HasLabel
     public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
-            self::Pending => 'Pending Screening',
-            self::Processing => 'Processing',
-            self::Screened => 'Screened',
-            self::Failed => 'Screening Failed',
+            self::Pending => __('Pending Screening'),
+            self::Processing => __('Processing'),
+            self::Screened => __('Screened'),
+            self::Failed => __('Screening Failed'),
         };
     }
 

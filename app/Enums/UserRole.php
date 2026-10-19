@@ -13,8 +13,8 @@ enum UserRole: string implements HasLabel
     public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
-            self::Admin => 'Administrator',
-            self::Recruiter => 'Recruiter',
+            self::Admin => __('Administrator'),
+            self::Recruiter => __('Recruiter'),
         };
     }
 

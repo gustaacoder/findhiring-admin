@@ -18,10 +18,10 @@ enum JobStatus: string implements HasColor, HasIcon, HasLabel
     public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
-            self::Draft => 'Draft',
-            self::Published => 'Published',
-            self::Closed => 'Closed',
-            self::Archived => 'Archived',
+            self::Draft => __('Draft'),
+            self::Published => __('Published'),
+            self::Closed => __('Closed'),
+            self::Archived => __('Archived'),
         };
     }
 

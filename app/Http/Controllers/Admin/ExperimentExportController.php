@@ -25,19 +25,19 @@ class ExperimentExportController extends Controller
             fwrite($handle, "\xEF\xBB\xBF");
 
             fputcsv($handle, [
-                'Experiment',
-                'Application ID',
-                'Job',
-                'Candidate',
-                'Run Index',
-                'Status',
-                'AI Score',
-                'AI Eligible',
-                'Duration (ms)',
-                'Model',
-                'Prompt Version',
-                'Error Code',
-                'Created At',
+                __('Experiment'),
+                __('Application ID'),
+                __('Job'),
+                __('Candidate'),
+                __('Run Index'),
+                __('Status'),
+                __('AI Score'),
+                __('AI Eligible'),
+                __('Duration (ms)'),
+                __('Model'),
+                __('Prompt Version'),
+                __('Error Code'),
+                __('Created At'),
             ]);
 
             $runs = $experiment->runs()

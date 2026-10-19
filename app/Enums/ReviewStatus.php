@@ -17,9 +17,9 @@ enum ReviewStatus: string implements HasColor, HasIcon, HasLabel
     public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
-            self::PendingReview => 'Pending Review',
-            self::UnderReview => 'Under Review',
-            self::Completed => 'Review Completed',
+            self::PendingReview => __('Pending Review'),
+            self::UnderReview => __('Under Review'),
+            self::Completed => __('Review Completed'),
         };
     }
 

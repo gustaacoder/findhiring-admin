@@ -8,6 +8,7 @@ use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -24,12 +25,17 @@ class ScreeningAnalysesResource extends Resource
 
     public static function getLabel(): ?string
     {
-        return 'Analysis';
+        return __('Analysis');
     }
 
     public static function getPluralLabel(): ?string
     {
-        return 'Screening Analyses';
+        return __('Screening Analyses');
+    }
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('AI Screening');
     }
 
     public static function form(Schema $schema): Schema
@@ -41,22 +47,23 @@ class ScreeningAnalysesResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('application.job.title')->label('Job'),
-                TextColumn::make('application.candidate.name')->label('Candidate')->searchable(),
-                TextColumn::make('status')->badge(),
-                TextColumn::make('score')->suffix('%')->placeholder('—'),
-                TextColumn::make('eligible')->formatStateUsing(fn ($state): string => is_null($state) ? '—' : ($state ? 'Yes' : 'No'))->color(fn ($state): string => is_null($state) ? 'gray' : ($state ? 'success' : 'danger')),
-                TextColumn::make('model_name')->toggleable(),
-                TextColumn::make('duration_ms')->label('Duration (ms)')->placeholder('—'),
-                TextColumn::make('error_code')->label('Error')->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('is_current')->boolean()->label('Current'),
-                TextColumn::make('created_at')->dateTime()->sortable(),
-                TextColumn::make('completed_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('application.job.title')->label(__('Job')),
+                TextColumn::make('application.candidate.name')->label(__('Candidate'))->searchable(),
+                TextColumn::make('status')->label(__('Status'))->badge(),
+                TextColumn::make('score')->label(__('Score'))->suffix('%')->placeholder('—'),
+                TextColumn::make('eligible')->label(__('Eligible'))->formatStateUsing(fn ($state): string => is_null($state) ? '—' : ($state ? __('Yes') : __('No')))->color(fn ($state): string => is_null($state) ? 'gray' : ($state ? 'success' : 'danger')),
+                TextColumn::make('model_name')->label(__('Model'))->toggleable(),
+                TextColumn::make('duration_ms')->label(__('Duration (ms)'))->placeholder('—'),
+                TextColumn::make('error_code')->label(__('Error'))->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('error_message')->label(__('Error Message'))->limit(80)->tooltip(fn (TextColumn $column): ?string => $column->getState())->toggleable(),
+                IconColumn::make('is_current')->boolean()->label(__('Current')),
+                TextColumn::make('created_at')->label(__('Created At'))->dateTime()->sortable(),
+                TextColumn::make('completed_at')->label(__('Completed At'))->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('status')->options(ScreeningStatus::class),
-                SelectFilter::make('job')->relationship('application.job', 'title')->searchable()->preload(),
-                SelectFilter::make('is_current')->options(['1' => 'Current', '0' => 'Not Current']),
+                SelectFilter::make('status')->label(__('Status'))->options(ScreeningStatus::class),
+                SelectFilter::make('job')->label(__('Job'))->relationship('application.job', 'title')->searchable()->preload(),
+                SelectFilter::make('is_current')->label(__('Current'))->options(['1' => __('Current'), '0' => __('Not Current')]),
             ])
             ->recordActions([])
             ->toolbarActions([])

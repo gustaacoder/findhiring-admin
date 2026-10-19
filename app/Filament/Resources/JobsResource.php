@@ -24,12 +24,17 @@ class JobsResource extends Resource
 
     public static function getLabel(): ?string
     {
-        return 'Job';
+        return __('Job');
     }
 
     public static function getPluralLabel(): ?string
     {
-        return 'Jobs';
+        return __('Jobs');
+    }
+
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        return __('Recruitment');
     }
 
     public static function form(Schema $schema): Schema

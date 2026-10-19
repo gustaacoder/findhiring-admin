@@ -18,7 +18,6 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
 
 class ViewApplication extends ViewRecord
 {
@@ -30,7 +29,7 @@ class ViewApplication extends ViewRecord
 
         return [
             Action::make('reanalyze')
-                ->label('Reanalyze')
+                ->label(__('Reanalyze'))
                 ->icon('heroicon-o-arrow-path')
                 ->requiresConfirmation()
                 ->action(function () use ($record): void {
@@ -39,15 +38,17 @@ class ViewApplication extends ViewRecord
                 })
                 ->visible(fn (): bool => $record->exists),
             Action::make('review')
-                ->label('Record Human Review')
-                ->icon('heroicon-o-user-check')
+                ->label(__('Record Human Review'))
+                ->icon('heroicon-o-clipboard-document-check')
                 ->form([
                     Select::make('decision')
+                        ->label(__('Decision'))
                         ->options(ReviewDecision::class)
                         ->required()
                         ->enum(ReviewDecision::class)
                         ->native(false),
                     Textarea::make('notes')
+                        ->label(__('Notes'))
                         ->rows(3)
                         ->nullable(),
                 ])
@@ -71,82 +72,82 @@ class ViewApplication extends ViewRecord
     {
         return $schema->components([
             Grid::make(3)->schema([
-                Section::make('Candidate')->schema([
-                    \Filament\Infolists\Components\TextEntry::make('candidate.name')->label('Name'),
-                    \Filament\Infolists\Components\TextEntry::make('candidate.email')->label('Email'),
-                    \Filament\Infolists\Components\TextEntry::make('candidate.phone')->label('Phone')->placeholder('—'),
+                Section::make(__('Candidate'))->schema([
+                    \Filament\Infolists\Components\TextEntry::make('candidate.name')->label(__('Name')),
+                    \Filament\Infolists\Components\TextEntry::make('candidate.email')->label(__('Email')),
+                    \Filament\Infolists\Components\TextEntry::make('candidate.phone')->label(__('Phone'))->placeholder('—'),
                 ])->columnSpan(1),
-                Section::make('Job')->schema([
-                    \Filament\Infolists\Components\TextEntry::make('job.title')->label('Job'),
-                    \Filament\Infolists\Components\TextEntry::make('job.slug')->label('Slug'),
-                    \Filament\Infolists\Components\TextEntry::make('submitted_at')->label('Submitted At')->dateTime(),
+                Section::make(__('Job'))->schema([
+                    \Filament\Infolists\Components\TextEntry::make('job.title')->label(__('Job')),
+                    \Filament\Infolists\Components\TextEntry::make('job.slug')->label(__('Slug')),
+                    \Filament\Infolists\Components\TextEntry::make('submitted_at')->label(__('Submitted At'))->dateTime(),
                 ])->columnSpan(1),
-                Section::make('Status')->schema([
-                    \Filament\Infolists\Components\TextEntry::make('status')->badge(),
-                    \Filament\Infolists\Components\TextEntry::make('review_status')->badge(),
+                Section::make(__('Status'))->schema([
+                    \Filament\Infolists\Components\TextEntry::make('status')->label(__('Status'))->badge(),
+                    \Filament\Infolists\Components\TextEntry::make('review_status')->label(__('Review Status'))->badge(),
                     \Filament\Infolists\Components\TextEntry::make('ranking_position')
-                        ->label('Ranking Position')
+                        ->label(__('Ranking Position'))
                         ->getStateUsing(fn ($record): string => (string) (app(CandidateRankingService::class)->rankOf($record) ?? '—')),
                 ])->columnSpan(1),
             ]),
-            Tabs::make('Application Tabs')->schema([
-                Tab::make('AI Analysis')->schema([
-                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.status')->label('Analysis Status')->badge()->visible(fn ($record) => $record->currentAnalysis !== null),
-                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.score')->label('Score')->suffix('%')->visible(fn ($record) => $record->currentAnalysis?->status === ScreeningStatus::Completed),
-                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.eligible')->label('Technically Eligible')->formatStateUsing(fn ($state): string => $state ? 'Yes' : 'No')->color(fn ($state): string => $state ? 'success' : 'danger')->visible(fn ($record) => $record->currentAnalysis?->status === ScreeningStatus::Completed),
-                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.summary')->label('Summary')->markdown()->visible(fn ($record) => filled($record->currentAnalysis?->summary)),
-                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.model_name')->label('Model')->visible(fn ($record) => filled($record->currentAnalysis?->model_name)),
-                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.duration_ms')->label('Processing Time (ms)')->visible(fn ($record) => $record->currentAnalysis?->duration_ms !== null),
-                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.error_code')->label('Error Code')->color('danger')->visible(fn ($record) => filled($record->currentAnalysis?->error_code)),
+            Tabs::make(__('Application Tabs'))->schema([
+                Tab::make(__('AI Analysis'))->schema([
+                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.status')->label(__('Analysis Status'))->badge()->visible(fn ($record) => $record->currentAnalysis !== null),
+                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.score')->label(__('Score'))->suffix('%')->visible(fn ($record) => $record->currentAnalysis?->status === ScreeningStatus::Completed),
+                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.eligible')->label(__('Technically Eligible'))->formatStateUsing(fn ($state): string => $state ? __('Yes') : __('No'))->color(fn ($state): string => $state ? 'success' : 'danger')->visible(fn ($record) => $record->currentAnalysis?->status === ScreeningStatus::Completed),
+                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.summary')->label(__('Summary'))->markdown()->visible(fn ($record) => filled($record->currentAnalysis?->summary)),
+                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.model_name')->label(__('Model'))->visible(fn ($record) => filled($record->currentAnalysis?->model_name)),
+                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.duration_ms')->label(__('Processing Time (ms)'))->visible(fn ($record) => $record->currentAnalysis?->duration_ms !== null),
+                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.error_code')->label(__('Error Code'))->color('danger')->visible(fn ($record) => filled($record->currentAnalysis?->error_code)),
+                    \Filament\Infolists\Components\TextEntry::make('currentAnalysis.error_message')->label(__('Error Message'))->color('danger')->visible(fn ($record) => filled($record->currentAnalysis?->error_message)),
                 ]),
-                Tab::make('Criterion Results')->schema([
+                Tab::make(__('Criterion Results'))->schema([
                     \Filament\Infolists\Components\RepeatableEntry::make('currentAnalysis.criterionResults')
                         ->schema([
-                            \Filament\Infolists\Components\TextEntry::make('criterion.name')->label('Criterion'),
-                            \Filament\Infolists\Components\TextEntry::make('matched')->label('Matched')->formatStateUsing(fn ($state): string => $state ? 'Yes' : 'No')->color(fn ($state): string => $state ? 'success' : 'danger'),
-                            \Filament\Infolists\Components\TextEntry::make('awarded_weight')->label('Awarded Weight (%)'),
-                            \Filament\Infolists\Components\TextEntry::make('evidence')->label('Evidence')->markdown(),
-                            \Filament\Infolists\Components\TextEntry::make('reason')->label('Reason')->markdown(),
+                            \Filament\Infolists\Components\TextEntry::make('criterion.name')->label(__('Criterion')),
+                            \Filament\Infolists\Components\TextEntry::make('matched')->label(__('Matched'))->formatStateUsing(fn ($state): string => $state ? __('Yes') : __('No'))->color(fn ($state): string => $state ? 'success' : 'danger'),
+                            \Filament\Infolists\Components\TextEntry::make('awarded_weight')->label(__('Awarded Weight (%)')),
+                            \Filament\Infolists\Components\TextEntry::make('evidence')->label(__('Evidence'))->markdown(),
+                            \Filament\Infolists\Components\TextEntry::make('reason')->label(__('Reason'))->markdown(),
                         ])
                         ->columns(2)
                         ->visible(fn ($record) => $record->currentAnalysis && $record->currentAnalysis->criterionResults()->exists()),
                 ]),
-                Tab::make('Human Reviews')->schema([
-                    \Filament\Tables\Table::make()
-                        ->relationship('humanReviews')
-                        ->columns([
-                            TextColumn::make('reviewer.name')->label('Reviewer'),
-                            TextColumn::make('decision')->badge(),
-                            TextColumn::make('notes')->limit(60),
-                            TextColumn::make('reviewed_at')->dateTime(),
+                Tab::make(__('Human Reviews'))->schema([
+                    \Filament\Infolists\Components\RepeatableEntry::make('humanReviews')
+                        ->label(__('Human Reviews'))
+                        ->schema([
+                            \Filament\Infolists\Components\TextEntry::make('reviewer.name')->label(__('Reviewer')),
+                            \Filament\Infolists\Components\TextEntry::make('decision')->label(__('Decision'))->badge(),
+                            \Filament\Infolists\Components\TextEntry::make('notes')->label(__('Notes'))->placeholder('—'),
+                            \Filament\Infolists\Components\TextEntry::make('reviewed_at')->label(__('Reviewed At'))->dateTime(),
                         ])
-                        ->recordActions([])
-                        ->toolbarActions([]),
+                        ->columns(4),
                 ]),
-                Tab::make('Processing History')->schema([
-                    \Filament\Tables\Table::make()
-                        ->relationship('screeningAnalyses')
-                        ->columns([
-                            TextColumn::make('status')->badge(),
-                            TextColumn::make('score')->suffix('%'),
-                            TextColumn::make('eligible')->formatStateUsing(fn ($state): string => is_null($state) ? '—' : ($state ? 'Yes' : 'No'))->color(fn ($state): string => is_null($state) ? 'gray' : ($state ? 'success' : 'danger')),
-                            TextColumn::make('is_current')->label('Current')->boolean(),
-                            TextColumn::make('duration_ms')->label('Duration (ms)'),
-                            TextColumn::make('error_code')->label('Error'),
-                            TextColumn::make('created_at')->dateTime()->label('Created'),
-                            TextColumn::make('completed_at')->dateTime()->label('Completed'),
+                Tab::make(__('Processing History'))->schema([
+                    \Filament\Infolists\Components\RepeatableEntry::make('screeningAnalyses')
+                        ->label(__('Processing History'))
+                        ->schema([
+                            \Filament\Infolists\Components\TextEntry::make('status')->label(__('Status'))->badge(),
+                            \Filament\Infolists\Components\TextEntry::make('score')->label(__('Score'))->suffix('%')->placeholder('—'),
+                            \Filament\Infolists\Components\TextEntry::make('eligible')->label(__('Eligible'))->formatStateUsing(fn ($state): string => is_null($state) ? '—' : ($state ? __('Yes') : __('No')))->color(fn ($state): string => is_null($state) ? 'gray' : ($state ? 'success' : 'danger')),
+                            \Filament\Infolists\Components\TextEntry::make('is_current')->label(__('Current'))->formatStateUsing(fn ($state): string => $state ? __('Yes') : __('No')),
+                            \Filament\Infolists\Components\TextEntry::make('duration_ms')->label(__('Duration (ms)'))->placeholder('—'),
+                            \Filament\Infolists\Components\TextEntry::make('error_code')->label(__('Error'))->placeholder('—'),
+                            \Filament\Infolists\Components\TextEntry::make('error_message')->label(__('Error Message'))->placeholder('—'),
+                            \Filament\Infolists\Components\TextEntry::make('created_at')->dateTime()->label(__('Created')),
+                            \Filament\Infolists\Components\TextEntry::make('completed_at')->dateTime()->label(__('Completed'))->placeholder('—'),
                         ])
-                        ->recordActions([])
-                        ->toolbarActions([]),
+                        ->columns(4),
                 ]),
-                Tab::make('Résumé')->schema([
-                    \Filament\Infolists\Components\TextEntry::make('original_filename')->label('Original Filename'),
-                    \Filament\Infolists\Components\TextEntry::make('resume_mime_type')->label('MIME Type'),
-                    \Filament\Infolists\Components\TextEntry::make('resume_size_bytes')->label('Size (bytes)'),
+                Tab::make(__('Résumé'))->schema([
+                    \Filament\Infolists\Components\TextEntry::make('original_filename')->label(__('Original Filename')),
+                    \Filament\Infolists\Components\TextEntry::make('resume_mime_type')->label(__('MIME Type')),
+                    \Filament\Infolists\Components\TextEntry::make('resume_size_bytes')->label(__('Size (bytes)')),
                     \Filament\Infolists\Components\TextEntry::make('resume_fingerprint')->label('SHA256')->limit(32)->copyable(),
-                    \Filament\Infolists\Components\Actions::make([
+                    \Filament\Schemas\Components\Actions::make([
                         Action::make('download_resume')
-                            ->label('Download Original Résumé')
+                            ->label(__('Download Original Résumé'))
                             ->icon('heroicon-o-document-arrow-down')
                             ->url(fn ($record): string => route('admin.applications.resume.download', ['application' => $record->id]))
                             ->openUrlInNewTab()

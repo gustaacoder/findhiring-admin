@@ -16,7 +16,7 @@ class UsersTable
                     ->label(__('Name'))
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email')
+                    ->label(__('Email'))
                     ->searchable(),
             ])
             ->filters([

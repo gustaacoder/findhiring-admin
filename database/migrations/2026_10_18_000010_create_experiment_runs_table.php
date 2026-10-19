@@ -10,10 +10,10 @@ return new class extends Migration
     {
         Schema::create('experiment_runs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('experiment_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('job_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('application_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('screening_analysis_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('experiment_id')->constrained('evaluation_experiments')->cascadeOnDelete();
+            $table->unsignedBigInteger('job_id')->nullable();
+            $table->unsignedBigInteger('application_id')->nullable();
+            $table->unsignedBigInteger('screening_analysis_id')->nullable();
             $table->unsignedInteger('run_index')->default(1);
             $table->string('status');
             $table->unsignedSmallInteger('score')->nullable();
@@ -28,6 +28,9 @@ return new class extends Migration
 
             $table->index(['experiment_id', 'run_index']);
             $table->index(['experiment_id', 'application_id']);
+            $table->foreign('job_id')->references('id')->on('jobs')->nullOnDelete();
+            $table->foreign('application_id')->references('id')->on('applications')->nullOnDelete();
+            $table->foreign('screening_analysis_id')->references('id')->on('screening_analyses')->nullOnDelete();
         });
     }
 

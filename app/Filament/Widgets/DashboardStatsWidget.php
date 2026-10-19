@@ -24,14 +24,14 @@ class DashboardStatsWidget extends StatsOverviewWidget
         $averageSeconds = $averageDuration !== null ? round($averageDuration / 1000, 2).' s' : '—';
 
         return [
-            Stat::make('Total Jobs', (string) Job::query()->count()),
-            Stat::make('Published Jobs', (string) Job::query()->where('status', JobStatus::Published)->count()),
-            Stat::make('Total Applications', (string) Application::query()->count()),
-            Stat::make('Pending Screenings', (string) Application::query()->where('status', ApplicationStatus::Pending)->count()),
-            Stat::make('Completed Screenings', (string) ScreeningAnalysis::query()->where('status', ScreeningStatus::Completed)->where('is_current', true)->count()),
-            Stat::make('Failed Screenings', (string) ScreeningAnalysis::query()->where('status', ScreeningStatus::Failed)->count()),
-            Stat::make('Pending Review', (string) Application::query()->where('review_status', ReviewStatus::PendingReview)->count()),
-            Stat::make('Average Processing Time', $averageSeconds),
+            Stat::make(__('Total Jobs'), (string) Job::query()->count()),
+            Stat::make(__('Published Jobs'), (string) Job::query()->where('status', JobStatus::Published)->count()),
+            Stat::make(__('Total Applications'), (string) Application::query()->count()),
+            Stat::make(__('Pending Screenings'), (string) Application::query()->where('status', ApplicationStatus::Pending)->count()),
+            Stat::make(__('Completed Screenings'), (string) ScreeningAnalysis::query()->where('status', ScreeningStatus::Completed)->where('is_current', true)->count()),
+            Stat::make(__('Failed Screenings'), (string) ScreeningAnalysis::query()->where('status', ScreeningStatus::Failed)->count()),
+            Stat::make(__('Pending Review'), (string) Application::query()->where('review_status', ReviewStatus::PendingReview)->count()),
+            Stat::make(__('Average Processing Time'), $averageSeconds),
         ];
     }
 }

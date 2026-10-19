@@ -28,7 +28,7 @@ class ScreeningService
             'prompt_version' => (string) config('findhiring.gemini.prompt_version', 'v1'),
         ]);
 
-        $this->auditLogger->log('screening.queued', $application, 'Screening analysis #'.$analysis->id.' queued.');
+        $this->auditLogger->log('screening.queued', $application, __('Screening analysis #:id queued.', ['id' => $analysis->id]));
 
         RunScreeningAnalysis::dispatch($analysis->id);
 
@@ -42,7 +42,7 @@ class ScreeningService
             'prompt_version' => (string) config('findhiring.gemini.prompt_version', 'v1'),
         ]);
 
-        $this->auditLogger->log('screening.reanalysis_requested', $application, 'Reanalysis requested as analysis #'.$analysis->id.'.');
+        $this->auditLogger->log('screening.reanalysis_requested', $application, __('Reanalysis requested as analysis #:id.', ['id' => $analysis->id]));
 
         RunScreeningAnalysis::dispatch($analysis->id);
 
@@ -129,12 +129,11 @@ class ScreeningService
 
             $application->markAsScreened();
             $this->syncExperimentRuns($analysis);
-            $this->auditLogger->log('screening.completed', $application, sprintf(
-                'Analysis #%d completed with score %d and eligibility %s.',
-                $analysis->id,
-                $scoreResult->score,
-                $scoreResult->eligible ? 'true' : 'false',
-            ));
+            $this->auditLogger->log('screening.completed', $application, __('Analysis #:id completed with score :score and eligibility :eligibility.', [
+                'id' => $analysis->id,
+                'score' => $scoreResult->score,
+                'eligibility' => $scoreResult->eligible ? __('Yes') : __('No'),
+            ]));
         } catch (ScreeningException $exception) {
             $durationMs = (int) round((microtime(true) - $startedAt) * 1000);
 
@@ -148,11 +147,10 @@ class ScreeningService
 
             $this->resolveApplicationStatus($application);
             $this->syncExperimentRuns($analysis);
-            $this->auditLogger->log('screening.failed', $application, sprintf(
-                'Analysis #%d failed with error code %s.',
-                $analysis->id,
-                $exception->errorCode,
-            ));
+            $this->auditLogger->log('screening.failed', $application, __('Analysis #:id failed with error code :code.', [
+                'id' => $analysis->id,
+                'code' => $exception->errorCode,
+            ]));
 
             if ($exception->retryable) {
                 throw $exception;

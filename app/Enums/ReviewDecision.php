@@ -16,8 +16,8 @@ enum ReviewDecision: string implements HasColor, HasIcon, HasLabel
     public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
-            self::Proceed => 'Proceed',
-            self::DoNotProceed => 'Do Not Proceed',
+            self::Proceed => __('Proceed'),
+            self::DoNotProceed => __('Do Not Proceed'),
         };
     }
 

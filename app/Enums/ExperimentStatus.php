@@ -19,11 +19,11 @@ enum ExperimentStatus: string implements HasColor, HasIcon, HasLabel
     public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
-            self::Draft => 'Draft',
-            self::Ready => 'Ready',
-            self::Running => 'Running',
-            self::Completed => 'Completed',
-            self::Failed => 'Failed',
+            self::Draft => __('Draft'),
+            self::Ready => __('Ready'),
+            self::Running => __('Running'),
+            self::Completed => __('Completed'),
+            self::Failed => __('Failed'),
         };
     }
 

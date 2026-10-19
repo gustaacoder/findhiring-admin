@@ -34,14 +34,14 @@ class ExperimentMetricsService
         $criterionAgreement = $this->criterionAgreement($experiment);
 
         return [
-            ['metric' => 'Total runs', 'value' => (string) $experiment->runs()->count(), 'description' => 'Number of recorded experimental runs.'],
-            ['metric' => 'Completed runs', 'value' => (string) $completedRuns->count(), 'description' => 'Runs that reached a completed state.'],
-            ['metric' => 'Failed runs', 'value' => (string) $experiment->runs()->where('status', ScreeningStatus::Failed)->count(), 'description' => 'Runs that terminated with an error.'],
-            ['metric' => 'Average processing time', 'value' => $averageDurationSeconds !== null ? ($averageDurationSeconds.' s') : '—', 'description' => 'Mean duration across completed runs.'],
-            ['metric' => 'Consolidated references', 'value' => (string) $consolidatedReferences->count(), 'description' => 'Manual reference evaluations marked as consolidated.'],
-            ['metric' => 'Criterion agreement', 'value' => $criterionAgreement !== null ? ($criterionAgreement.'%') : '—', 'description' => 'Agreement between current AI results and consolidated reference at criterion level.'],
-            ['metric' => 'Mean absolute error (score)', 'value' => $meanAbsoluteError !== null ? (string) $meanAbsoluteError : '—', 'description' => 'Average absolute difference between AI and reference scores.'],
-            ['metric' => 'Eligibility agreement', 'value' => $this->eligibilityAgreement($experiment), 'description' => 'Proportion of matched cases by eligibility.'],
+            ['metric' => __('Total runs'), 'value' => (string) $experiment->runs()->count(), 'description' => __('Number of recorded experimental runs.')],
+            ['metric' => __('Completed runs'), 'value' => (string) $completedRuns->count(), 'description' => __('Runs that reached a completed state.')],
+            ['metric' => __('Failed runs'), 'value' => (string) $experiment->runs()->where('status', ScreeningStatus::Failed)->count(), 'description' => __('Runs that terminated with an error.')],
+            ['metric' => __('Average processing time'), 'value' => $averageDurationSeconds !== null ? ($averageDurationSeconds.' s') : '—', 'description' => __('Mean duration across completed runs.')],
+            ['metric' => __('Consolidated references'), 'value' => (string) $consolidatedReferences->count(), 'description' => __('Manual reference evaluations marked as consolidated.')],
+            ['metric' => __('Criterion agreement'), 'value' => $criterionAgreement !== null ? ($criterionAgreement.'%') : '—', 'description' => __('Agreement between current AI results and consolidated reference at criterion level.')],
+            ['metric' => __('Mean absolute error (score)'), 'value' => $meanAbsoluteError !== null ? (string) $meanAbsoluteError : '—', 'description' => __('Average absolute difference between AI and reference scores.')],
+            ['metric' => __('Eligibility agreement'), 'value' => $this->eligibilityAgreement($experiment), 'description' => __('Proportion of matched cases by eligibility.')],
         ];
     }
 

@@ -22,12 +22,15 @@ class JobsTable
         return $table
             ->columns([
                 TextColumn::make('title')
+                    ->label(__('Title'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('slug')
+                    ->label(__('Slug'))
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('status')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn (JobStatus $state): string => match ($state) {
                         JobStatus::Draft => 'gray',
@@ -37,11 +40,12 @@ class JobsTable
                     }),
                 TextColumn::make('applications_count')
                     ->counts('applications')
-                    ->label('Applications'),
+                    ->label(__('Applications')),
                 TextColumn::make('criteria_count')
                     ->counts('criteria')
-                    ->label('Criteria'),
+                    ->label(__('Criteria')),
                 TextColumn::make('published_at')
+                    ->label(__('Published At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(),
@@ -49,13 +53,15 @@ class JobsTable
                     ->state(fn (Job $record): string => $record->publicUrl())
                     ->copyable()
                     ->limit(40)
-                    ->label('Public URL')
+                    ->label(__('Public URL'))
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_by')
+                    ->label(__('Created By'))
                     ->getStateUsing(fn (Job $record): string => $record->creator?->name ?? '—'),
             ])
             ->filters([
                 SelectFilter::make('status')
+                    ->label(__('Status'))
                     ->options(JobStatus::class),
                 TrashedFilter::make(),
             ])

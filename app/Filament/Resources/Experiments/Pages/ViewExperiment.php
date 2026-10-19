@@ -14,13 +14,13 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\TextColumn;
 
 class ViewExperiment extends ViewRecord
 {
@@ -32,25 +32,25 @@ class ViewExperiment extends ViewRecord
 
         return [
             Action::make('capture_reference')
-                ->label('Record Reference Evaluation')
+                ->label(__('Record Reference Evaluation'))
                 ->icon('heroicon-o-clipboard-document-check')
                 ->visible(fn (): bool => $record->exists)
                 ->form([
                     Select::make('application_id')
-                        ->label('Application')
+                        ->label(__('Application'))
                         ->options($this->availableReferenceApplications())
                         ->required()
                         ->searchable()
                         ->preload(),
                     Textarea::make('criterion_results_json')
-                        ->label('Criterion Results (JSON array)')
+                        ->label(__('Criterion Results (JSON array)'))
                         ->rows(8)
                         ->required()
-                        ->helperText('Provide [{"job_criterion_id": 1, "matched": true}, ...] for all criteria.'),
-                    TextInput::make('score')->numeric()->required()->minValue(0)->maxValue(100),
-                    Select::make('eligible')->options(['1' => 'Yes', '0' => 'No'])->required()->native(false),
-                    Textarea::make('notes')->nullable()->rows(3),
-                    Checkbox::make('is_consolidated')->label('Consolidated reference'),
+                        ->helperText(__('Provide [{"job_criterion_id": 1, "matched": true}, ...] for all criteria.')),
+                    TextInput::make('score')->label(__('Score'))->numeric()->required()->minValue(0)->maxValue(100),
+                    Select::make('eligible')->label(__('Eligible'))->options(['1' => __('Yes'), '0' => __('No')])->required()->native(false),
+                    Textarea::make('notes')->label(__('Notes'))->nullable()->rows(3),
+                    Checkbox::make('is_consolidated')->label(__('Consolidated reference')),
                 ])
                 ->action(function (array $data) use ($record): void {
                     $criterionResults = json_decode($data['criterion_results_json'], true);
@@ -73,7 +73,7 @@ class ViewExperiment extends ViewRecord
                     $this->redirect(static::getResource()::getUrl('view', ['record' => $record]));
                 }),
             Action::make('run_analysis')
-                ->label('Run Controlled Analysis')
+                ->label(__('Run Controlled Analysis'))
                 ->icon('heroicon-o-play')
                 ->requiresConfirmation()
                 ->visible(fn (): bool => $record->exists)
@@ -82,7 +82,7 @@ class ViewExperiment extends ViewRecord
                     $this->redirect(static::getResource()::getUrl('view', ['record' => $record]));
                 }),
             Action::make('export_csv')
-                ->label('Export CSV')
+                ->label(__('Export CSV'))
                 ->icon('heroicon-o-arrow-down-tray')
                 ->url(fn (): string => route('admin.experiments.export', ['experiment' => $record->id]))
                 ->openUrlInNewTab()
@@ -160,60 +160,59 @@ class ViewExperiment extends ViewRecord
     {
         return $schema->components([
             Grid::make(2)->schema([
-                Section::make('Configuration')->schema([
-                    \Filament\Infolists\Components\TextEntry::make('name'),
-                    \Filament\Infolists\Components\TextEntry::make('dataset_identifier'),
-                    \Filament\Infolists\Components\TextEntry::make('status')->badge(),
-                    \Filament\Infolists\Components\TextEntry::make('model_name'),
-                    \Filament\Infolists\Components\TextEntry::make('prompt_version'),
-                    \Filament\Infolists\Components\TextEntry::make('description')->markdown(),
+                Section::make(__('Configuration'))->schema([
+                    \Filament\Infolists\Components\TextEntry::make('name')->label(__('Name')),
+                    \Filament\Infolists\Components\TextEntry::make('dataset_identifier')->label(__('Dataset Identifier')),
+                    \Filament\Infolists\Components\TextEntry::make('status')->label(__('Status'))->badge(),
+                    \Filament\Infolists\Components\TextEntry::make('model_name')->label(__('Model')),
+                    \Filament\Infolists\Components\TextEntry::make('prompt_version')->label(__('Prompt Version')),
+                    \Filament\Infolists\Components\TextEntry::make('description')->label(__('Description'))->markdown(),
                 ])->columnSpan(1),
-                Section::make('Execution')->schema([
-                    \Filament\Infolists\Components\TextEntry::make('started_at')->dateTime()->placeholder('—'),
-                    \Filament\Infolists\Components\TextEntry::make('completed_at')->dateTime()->placeholder('—'),
+                Section::make(__('Execution'))->schema([
+                    \Filament\Infolists\Components\TextEntry::make('started_at')->label(__('Started At'))->dateTime()->placeholder('—'),
+                    \Filament\Infolists\Components\TextEntry::make('completed_at')->label(__('Completed At'))->dateTime()->placeholder('—'),
                     \Filament\Infolists\Components\TextEntry::make('runs_count')
+                        ->label(__('Runs'))
                         ->getStateUsing(fn ($record): int => $record->runs()->count()),
                 ])->columnSpan(1),
             ]),
-            Tabs::make('Experiment')->schema([
-                Tab::make('Reference Evaluations')->schema([
-                    \Filament\Tables\Table::make()
-                        ->relationship('referenceEvaluations')
-                        ->columns([
-                            TextColumn::make('application.candidate.name')->label('Candidate'),
-                            TextColumn::make('application.job.title')->label('Job'),
-                            TextColumn::make('score')->suffix('%'),
-                            TextColumn::make('eligible')->formatStateUsing(fn ($state): string => $state ? 'Yes' : 'No')->color(fn ($state): string => $state ? 'success' : 'danger'),
-                            TextColumn::make('is_consolidated')->boolean()->label('Consolidated'),
-                            TextColumn::make('evaluator.name')->label('Evaluator')->placeholder('—'),
-                            TextColumn::make('notes')->limit(40)->placeholder('—'),
+            Tabs::make(__('Experiment'))->schema([
+                Tab::make(__('Reference Evaluations'))->schema([
+                    \Filament\Infolists\Components\RepeatableEntry::make('referenceEvaluations')
+                        ->label(__('Reference Evaluations'))
+                        ->schema([
+                            \Filament\Infolists\Components\TextEntry::make('application.candidate.name')->label(__('Candidate')),
+                            \Filament\Infolists\Components\TextEntry::make('application.job.title')->label(__('Job')),
+                            \Filament\Infolists\Components\TextEntry::make('score')->label(__('Score'))->suffix('%'),
+                            \Filament\Infolists\Components\TextEntry::make('eligible')->label(__('Eligible'))->formatStateUsing(fn ($state): string => $state ? __('Yes') : __('No'))->color(fn ($state): string => $state ? 'success' : 'danger'),
+                            \Filament\Infolists\Components\TextEntry::make('is_consolidated')->label(__('Consolidated'))->formatStateUsing(fn ($state): string => $state ? __('Yes') : __('No')),
+                            \Filament\Infolists\Components\TextEntry::make('evaluator.name')->label(__('Evaluator'))->placeholder('—'),
+                            \Filament\Infolists\Components\TextEntry::make('notes')->label(__('Notes'))->placeholder('—'),
                         ])
-                        ->recordActions([])
-                        ->toolbarActions([]),
+                        ->columns(4),
                 ]),
-                Tab::make('Experiment Runs')->schema([
-                    \Filament\Tables\Table::make()
-                        ->relationship('runs')
-                        ->columns([
-                            TextColumn::make('application.candidate.name')->label('Candidate'),
-                            TextColumn::make('job.title')->label('Job'),
-                            TextColumn::make('run_index')->label('Run'),
-                            TextColumn::make('status')->badge(),
-                            TextColumn::make('score')->suffix('%')->placeholder('—'),
-                            TextColumn::make('eligible')->formatStateUsing(fn ($state): string => is_null($state) ? '—' : ($state ? 'Yes' : 'No'))->color(fn ($state): string => is_null($state) ? 'gray' : ($state ? 'success' : 'danger')),
-                            TextColumn::make('duration_ms')->label('Duration (ms)')->placeholder('—'),
-                            TextColumn::make('model_name')->toggleable(),
+                Tab::make(__('Experiment Runs'))->schema([
+                    \Filament\Infolists\Components\RepeatableEntry::make('runs')
+                        ->label(__('Experiment Runs'))
+                        ->schema([
+                            \Filament\Infolists\Components\TextEntry::make('application.candidate.name')->label(__('Candidate')),
+                            \Filament\Infolists\Components\TextEntry::make('job.title')->label(__('Job')),
+                            \Filament\Infolists\Components\TextEntry::make('run_index')->label(__('Run')),
+                            \Filament\Infolists\Components\TextEntry::make('status')->label(__('Status'))->badge(),
+                            \Filament\Infolists\Components\TextEntry::make('score')->label(__('Score'))->suffix('%')->placeholder('—'),
+                            \Filament\Infolists\Components\TextEntry::make('eligible')->label(__('Eligible'))->formatStateUsing(fn ($state): string => is_null($state) ? '—' : ($state ? __('Yes') : __('No')))->color(fn ($state): string => is_null($state) ? 'gray' : ($state ? 'success' : 'danger')),
+                            \Filament\Infolists\Components\TextEntry::make('duration_ms')->label(__('Duration (ms)'))->placeholder('—'),
+                            \Filament\Infolists\Components\TextEntry::make('model_name')->label(__('Model'))->placeholder('—'),
                         ])
-                        ->recordActions([])
-                        ->toolbarActions([]),
+                        ->columns(4),
                 ]),
-                Tab::make('Summary Metrics')->schema([
+                Tab::make(__('Summary Metrics'))->schema([
                     \Filament\Infolists\Components\RepeatableEntry::make('metrics')
                         ->getStateUsing(fn ($record): array => app(ExperimentMetricsService::class)->summary($record))
                         ->schema([
-                            \Filament\Infolists\Components\TextEntry::make('metric'),
-                            \Filament\Infolists\Components\TextEntry::make('value'),
-                            \Filament\Infolists\Components\TextEntry::make('description'),
+                            \Filament\Infolists\Components\TextEntry::make('metric')->label(__('Metric')),
+                            \Filament\Infolists\Components\TextEntry::make('value')->label(__('Value')),
+                            \Filament\Infolists\Components\TextEntry::make('description')->label(__('Description')),
                         ])
                         ->columns(3),
                 ]),

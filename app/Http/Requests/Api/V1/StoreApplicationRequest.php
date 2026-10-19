@@ -28,11 +28,30 @@ class StoreApplicationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'resume.required' => 'A résumé file is required.',
-            'resume.file' => 'The résumé must be a valid file.',
-            'resume.max' => 'The résumé must not exceed :max kilobytes.',
-            'resume.mimes' => 'The résumé must be a PDF or DOCX document.',
-            'email.email' => 'A valid email address is required.',
+            'name.required' => __('Your full name is required.'),
+            'name.string' => __('Your full name must be text.'),
+            'name.min' => __('Your full name must contain at least :min characters.'),
+            'name.max' => __('Your full name must not exceed :max characters.'),
+            'email.required' => __('Your email address is required.'),
+            'email.string' => __('Your email address must be text.'),
+            'email.email' => __('A valid email address is required.'),
+            'email.max' => __('Your email address must not exceed :max characters.'),
+            'phone.string' => __('Your phone number must be text.'),
+            'phone.max' => __('Your phone number must not exceed :max characters.'),
+            'resume.required' => __('A résumé file is required.'),
+            'resume.file' => __('The résumé must be a valid file.'),
+            'resume.max' => __('The résumé must not exceed :max kilobytes.'),
+            'resume.mimes' => __('The résumé must be a PDF or DOCX document.'),
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'name' => __('Name'),
+            'email' => __('Email'),
+            'phone' => __('Phone'),
+            'resume' => __('Résumé'),
         ];
     }
 }

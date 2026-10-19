@@ -13,8 +13,8 @@ enum CriterionType: string implements HasLabel
     public function getLabel(): string|Htmlable|null
     {
         return match ($this) {
-            self::Required => 'Required',
-            self::Preferred => 'Preferred',
+            self::Required => __('Required'),
+            self::Preferred => __('Preferred'),
         };
     }
 

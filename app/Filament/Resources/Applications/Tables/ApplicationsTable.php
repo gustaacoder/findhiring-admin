@@ -19,46 +19,52 @@ class ApplicationsTable
         return $table
             ->columns([
                 TextColumn::make('candidate.name')
-                    ->label('Candidate')
+                    ->label(__('Candidate'))
                     ->searchable(query: fn (Builder $query, string $search): Builder => $query->whereHas('candidate', fn ($builder) => $builder->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%')))
                     ->sortable(),
                 TextColumn::make('job.title')
-                    ->label('Job')
+                    ->label(__('Job'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('Status'))
                     ->badge(),
                 TextColumn::make('review_status')
-                    ->label('Review Status')
+                    ->label(__('Review Status'))
                     ->badge(),
                 TextColumn::make('currentAnalysis.score')
-                    ->label('Score')
+                    ->label(__('Score'))
                     ->suffix('%')
                     ->placeholder('—'),
                 TextColumn::make('currentAnalysis.eligible')
-                    ->label('Eligible')
-                    ->formatStateUsing(fn ($state): string => is_null($state) ? '—' : ($state ? 'Yes' : 'No'))
+                    ->label(__('Eligible'))
+                    ->formatStateUsing(fn ($state): string => is_null($state) ? '—' : ($state ? __('Yes') : __('No')))
                     ->color(fn ($state): string => is_null($state) ? 'gray' : ($state ? 'success' : 'danger')),
                 TextColumn::make('ranking_position')
-                    ->label('Rank')
+                    ->label(__('Rank'))
                     ->getStateUsing(fn (Application $record): string => (string) (app(CandidateRankingService::class)->rankOf($record) ?? '—')),
                 TextColumn::make('submitted_at')
+                    ->label(__('Submitted At'))
                     ->dateTime()
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('job')
+                    ->label(__('Job'))
                     ->relationship('job', 'title')
                     ->searchable()
                     ->preload(),
                 SelectFilter::make('status')
+                    ->label(__('Status'))
                     ->options(ApplicationStatus::class),
                 SelectFilter::make('review_status')
+                    ->label(__('Review Status'))
                     ->options(ReviewStatus::class),
                 SelectFilter::make('eligible')
+                    ->label(__('Eligible'))
                     ->options([
-                        '1' => 'Eligible',
-                        '0' => 'Not Eligible',
+                        '1' => __('Eligible'),
+                        '0' => __('Not Eligible'),
                     ])
                     ->query(fn (Builder $query, array $data): Builder => $query
                         ->when(
