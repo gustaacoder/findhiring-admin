@@ -20,9 +20,6 @@ class RunScreeningAnalysis implements ShouldBeUnique, ShouldQueue
 
     public int $tries;
 
-    /** @var list<int> */
-    public array $backoff = [10, 30, 60];
-
     public int $uniqueFor = 600;
 
     public function __construct(public readonly int $analysisId)
@@ -33,6 +30,11 @@ class RunScreeningAnalysis implements ShouldBeUnique, ShouldQueue
     public function uniqueId(): string
     {
         return 'screening-analysis-'.$this->analysisId;
+    }
+
+    public function backoff(): array
+    {
+        return [30, 120, 300, 600];
     }
 
     public function handle(ScreeningService $screeningService): void

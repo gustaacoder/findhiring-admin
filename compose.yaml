@@ -33,7 +33,7 @@ services:
             args:
                 WWWGROUP: '${WWWGROUP}'
         image: sail-8.4/app
-        command: php artisan queue:work --sleep=3 --tries=3 --timeout=120
+        command: php artisan queue:work --sleep=3 --timeout=120
         restart: unless-stopped
         extra_hosts:
             - 'host.docker.internal:host-gateway'

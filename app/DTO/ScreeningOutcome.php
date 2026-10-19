@@ -8,6 +8,7 @@ final readonly class ScreeningOutcome
     public function __construct(
         public array $criteria,
         public string $summary,
+        public ?string $modelName = null,
     ) {}
 
     public function matchedCriterionIds(): array

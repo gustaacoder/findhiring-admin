@@ -114,6 +114,7 @@ class ScreeningService
                     'score' => $scoreResult->score,
                     'eligible' => $scoreResult->eligible,
                     'summary' => $outcome->summary,
+                    'model_name' => $outcome->modelName ?? $analysis->model_name,
                     'duration_ms' => $durationMs,
                     'completed_at' => now(),
                     'error_code' => null,

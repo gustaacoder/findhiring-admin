@@ -4,6 +4,7 @@ namespace App\Services\Screening;
 
 use App\DTO\ScreeningOutcome;
 use App\Exceptions\ScreeningException;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 class GeminiScreeningClient
@@ -31,11 +32,40 @@ class GeminiScreeningClient
             $criteriaSnapshot['criteria'] ?? [],
         ));
 
-        $response = Http::withHeaders(['x-goog-api-key' => $apiKey])
-            ->acceptJson()
-            ->timeout((int) config('findhiring.gemini.timeout', 90))
-            ->connectTimeout(10)
-            ->post($this->endpoint(), $this->requestPayload($criteriaSnapshot, $resumeText));
+        $models = $this->models();
+        $lastException = null;
+
+        foreach ($models as $index => $model) {
+            try {
+                return $this->screenWithModel($apiKey, $model, $criteriaSnapshot, $resumeText, $expectedCriterionIds);
+            } catch (ScreeningException $exception) {
+                $lastException = $exception;
+
+                if (! $exception->retryable || $index === array_key_last($models)) {
+                    throw $exception;
+                }
+            }
+        }
+
+        throw $lastException ?? ScreeningException::geminiUnavailable('no model was available.');
+    }
+
+    private function screenWithModel(
+        string $apiKey,
+        string $model,
+        array $criteriaSnapshot,
+        string $resumeText,
+        array $expectedCriterionIds,
+    ): ScreeningOutcome {
+        try {
+            $response = Http::withHeaders(['x-goog-api-key' => $apiKey])
+                ->acceptJson()
+                ->timeout((int) config('findhiring.gemini.timeout', 90))
+                ->connectTimeout(10)
+                ->post($this->endpoint($model), $this->requestPayload($criteriaSnapshot, $resumeText));
+        } catch (ConnectionException $exception) {
+            throw ScreeningException::geminiTransportError($exception->getMessage());
+        }
 
         if ($response->failed()) {
             throw $this->mapHttpFailure($response->status(), $response->body());
@@ -55,12 +85,27 @@ class GeminiScreeningClient
             throw ScreeningException::geminiMalformedJson('candidate content is not valid JSON.');
         }
 
-        return $this->validator->validate($decoded, $expectedCriterionIds);
+        $outcome = $this->validator->validate($decoded, $expectedCriterionIds);
+
+        return new ScreeningOutcome($outcome->criteria, $outcome->summary, $model);
     }
 
-    private function endpoint(): string
+    private function models(): array
     {
-        $model = rawurlencode((string) config('findhiring.gemini.model', 'gemini-3.8-flash'));
+        $models = [
+            (string) config('findhiring.gemini.model', 'gemini-3.8-flash'),
+            ...config('findhiring.gemini.fallback_models', []),
+        ];
+
+        return array_values(array_unique(array_filter(
+            array_map(fn (mixed $model): string => trim((string) $model), $models),
+            fn (string $model): bool => $model !== '',
+        )));
+    }
+
+    private function endpoint(string $model): string
+    {
+        $model = rawurlencode($model);
 
         return self::ENDPOINT.'/'.$model.':generateContent';
     }
