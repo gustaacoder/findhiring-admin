@@ -2,17 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
-use Filament\Models\Contracts\HasTenants;
-use Filament\Panel;
+use App\Enums\UserRole;
+use Filament\Models\Contracts\HasName;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Collection;
 
-class User extends Authenticatable implements HasTenants
+class User extends Authenticatable implements HasName
 {
     use HasFactory;
     use Notifiable;
@@ -21,6 +18,8 @@ class User extends Authenticatable implements HasTenants
         'name',
         'email',
         'password',
+        'role',
+        'is_active',
     ];
 
     protected $hidden = [
@@ -33,21 +32,43 @@ class User extends Authenticatable implements HasTenants
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class,
+            'is_active' => 'boolean',
         ];
     }
 
-    public function getTenants(Panel $panel): Collection
+    public function getFilamentName(): string
     {
-        return $this->companies;
+        return $this->name;
     }
 
-    public function canAccessTenant(Model $tenant): bool
+    public function isAdmin(): bool
     {
-        return $this->companies->contains($tenant);
+        return $this->role === UserRole::Admin;
     }
 
-    public function companies()
+    public function authoredJobs(): HasMany
     {
-        return $this->belongsToMany(Company::class, 'company_users');
+        return $this->hasMany(Job::class, 'created_by');
+    }
+
+    public function humanReviews(): HasMany
+    {
+        return $this->hasMany(HumanReview::class, 'reviewer_id');
+    }
+
+    public function referenceEvaluations(): HasMany
+    {
+        return $this->hasMany(ReferenceEvaluation::class, 'evaluator_id');
+    }
+
+    public function auditLogs(): HasMany
+    {
+        return $this->hasMany(AuditLog::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }
