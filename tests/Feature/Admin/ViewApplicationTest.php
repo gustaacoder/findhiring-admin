@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Enums\ReviewDecision;
+use App\Enums\ReviewStatus;
 use App\Filament\Resources\Applications\Pages\ViewApplication;
 use App\Models\Application;
 use App\Models\HumanReview;
@@ -28,5 +30,26 @@ class ViewApplicationTest extends TestCase
             ->assertSuccessful()
             ->assertSee(__('Human Reviews'))
             ->assertSee(__('Processing History'));
+    }
+
+    public function test_recruiter_can_record_a_human_review(): void
+    {
+        $user = User::factory()->admin()->create();
+        $application = Application::factory()->create();
+
+        Livewire::actingAs($user)
+            ->test(ViewApplication::class, ['record' => $application->getRouteKey()])
+            ->callAction('review', [
+                'decision' => ReviewDecision::Proceed->value,
+                'notes' => 'Candidate meets the technical requirements.',
+            ])
+            ->assertHasNoActionErrors();
+
+        $this->assertDatabaseHas('human_reviews', [
+            'application_id' => $application->id,
+            'reviewer_id' => $user->id,
+            'decision' => ReviewDecision::Proceed->value,
+        ]);
+        $this->assertSame(ReviewStatus::Completed, $application->refresh()->review_status);
     }
 }

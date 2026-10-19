@@ -28,7 +28,7 @@ enum ReviewStatus: string implements HasColor, HasIcon, HasLabel
         return match ($this) {
             self::PendingReview => Heroicon::ClipboardDocumentList,
             self::UnderReview => Heroicon::Eye,
-            self::Completed => Heroicon::UserCheck,
+            self::Completed => Heroicon::ClipboardDocumentCheck,
         };
     }
 
